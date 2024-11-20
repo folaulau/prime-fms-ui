@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+<head>
+    <title>Monthly Budget</title>
+
+    <link rel="stylesheet" href="/assets/primeui/themes/ui-lightness/theme.css" />
+    <!-- <link rel="stylesheet" href="/assets/primeui/primeui.css" /> -->
+    <link rel="stylesheet" href="/assets/jquery/jquery-ui.min.css" />
+    <link rel="stylesheet" href="/assets/primeui/primeui.min.css" />
+
+    <link rel="stylesheet" href="/assets/primeicon/primeicons.css" />
+
+    <script type="text/javascript" src="/assets/jquery/jquery.min.js"></script>
+    <script type="text/javascript" src="/assets/jquery/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="/assets/primeui/primeui.min.js"></script>
+
+    <!-- <link rel="stylesheet" href="/assets/bootstrap/css/bootstrap.min.css" />-->
+    <!-- <link rel="stylesheet" href="/assets/primeui/themes/glass-x/theme.css" /> -->
+    <link rel="stylesheet" href="/assets/primeui/themes/omega/theme.css" />
+    <link rel="stylesheet" href="/assets/bootstrap/css/bootstrap.min.css" />
+    <script type="text/javascript" src="/assets/bootstrap/js/bootstrap.bundle.min.js"></script> 
+
+</head>
+<body>
+
+<div class="container">
+    
+    <div class="row">
+        <div class="col-12 text-center">
+            <h2>Monthly Budget</h2>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <div class="row">
+                <div class="col-3">
+                    <div class="row">
+                        <div class="col-12">
+                            <label for="fiscalYear">Fiscal Year:</label>
+                            <select id="fiscalYearDropdown" name="fiscalYearDropdown" style="width: 200px;">
+                                <option value="2025">2026</option>
+                                <option value="2025">2025</option>
+                                <option value="2025">2024</option>
+                                <option value="2025">2023</option>
+
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <label for="taskArea">Task Area:</label>
+                            <select id="taskArea" class="dropdown">
+                                <option value="Acquisition - Basara">A - Acquisition - Basara</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <label for="supervisor">Supervisor:</label>
+                            <select id="supervisor" class="dropdown">
+                                <option value="/Basara">/Basara</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+<script type="text/javascript">
+    $(document).ready(function(){
+        // call api to get all customers
+
+        $('#fiscalYearDropdown').puidropdown();
+        $('#taskArea').puidropdown();
+        $('#supervisor').puidropdown();
+
+    });
+</script>
+</body>
+</html>

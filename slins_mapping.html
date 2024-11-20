@@ -1,0 +1,395 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+<head>
+    <title>Slins Mapping</title>
+
+    <link rel="stylesheet" href="/assets/primeui/themes/ui-lightness/theme.css" />
+    <!-- <link rel="stylesheet" href="/assets/primeui/primeui.css" /> -->
+    <link rel="stylesheet" href="/assets/jquery/jquery-ui.min.css" />
+    <link rel="stylesheet" href="/assets/primeui/primeui.min.css" />
+
+    <link rel="stylesheet" href="/assets/primeicon/primeicons.css" />
+
+    <script type="text/javascript" src="/assets/jquery/jquery.min.js"></script>
+    <script type="text/javascript" src="/assets/jquery/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="/assets/primeui/primeui.min.js"></script>
+
+    <!-- <link rel="stylesheet" href="/assets/bootstrap/css/bootstrap.min.css" />-->
+    <!-- <link rel="stylesheet" href="/assets/primeui/themes/glass-x/theme.css" /> -->
+    <link rel="stylesheet" href="/assets/primeui/themes/omega/theme.css" />
+    <!-- <link rel="stylesheet" href="/assets/bootstrap/css/bootstrap.min.css" /> -->
+    <link rel="stylesheet" href="/assets/bootstrap/css/bootstrap-grid.min.css" />
+    <!-- <script type="text/javascript" src="/assets/bootstrap/css/bootstrap-grid.css"></script>  -->
+    <!-- <script type="text/javascript" src="/assets/bootstrap/js/bootstrap.min.js"></script>  -->
+
+</head>
+<body>
+
+<div class="container">
+    
+    <div class="row">
+        <div class="col-12 text-center">
+            <h2>Slins Mapping</h2>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <fieldset id="slinAddUpdateRow" style="margin-bottom:20px">
+                <legend>Add New</legend>
+            
+                <div class="row p-2">
+                    <div class="col-3">
+                        <label>Charge Code</label><br/>
+                        <input id="chargeCode" type="text"/>
+                    </div>
+                    <div class="col-3">
+                        <label>Slin</label><br/>
+                        <input id="slin" type="text"/>
+                    </div>
+                    <div class="col-3">
+                        <label>TPS ID</label><br/>
+                        <input id="tpsId" type="text" />
+                    </div>
+                    <div class="col-3">
+                        <label>TPS Name</label><br/>
+                        <input id="tpsName" type="text"/>
+                    </div>
+                </div>
+                <div class="row p-2">
+                    
+                    <div class="col-3">
+                        <label>Effective Date</label><br/>
+                        <input id="effDate" type="text" is="p-inputtext" />
+                    </div>
+                    <div class="col-3">
+                        <label>Closed Date</label><br/>
+                        <input id="closedDate" type="text" is="p-inputtext" />
+                    </div>
+                    <div class="col-6">
+                        <label>Notes</label><br/>
+                        <textarea id="notes" rows="2" cols="60"></textarea>
+                    </div>
+                </div>
+                <div class="row p-2">
+                    
+                    <div class="col-12">
+                        <button id="saveButton" type="button">Save</button>
+                    </div>
+                </div>
+            </fieldset>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-12">
+            
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <p id="currentSlinsTable"></p>
+        </div>
+    </div>
+</div>
+
+
+
+
+<script type="text/javascript">
+    $(document).ready(function(){
+        // call api to get all customers
+
+        $('#in').puiinputtext();
+
+        $('#slinAddUpdateRow').puifieldset();
+
+        $('#saveButton').puibutton();
+
+        var backendData = [
+            {
+            "id": 64,
+            "chargeCode": "4118194.0002.2801.2801BM.426",
+            "slin": "2801BM",
+            "tpsId": "426",
+            "tpsName": "1.0 HARDWARE/MAJOR EQUIP",
+            "notes": "Move to here from 2801BH Effective 10/3/24",
+            "effDate": "2024-10-03"
+            },
+            {
+            "id": 63,
+            "chargeCode": "4118194.0002.2801.2801BW.460",
+            "slin": "2801BW",
+            "tpsId": "460",
+            "tpsName": "BMD 5.1.5 ",
+            "notes": "Move to here from 2801AP Effective 10/12/24",
+            "effDate": "2024-10-12"
+            },
+            {
+            "id": 62,
+            "chargeCode": "4118194.0002.2801.2801BW.458",
+            "slin": "2801BW",
+            "tpsId": "458",
+            "tpsName": "BMD 6.0.1",
+            "notes": "Move to here from 2801AP Effective 10/12/24",
+            "effDate": "2024-10-12"
+            },
+            {
+            "id": 61,
+            "chargeCode": "4118194.0002.2801.2801BW.453",
+            "slin": "2801BW",
+            "tpsId": "453",
+            "tpsName": "GUAM MODELING DEVEL SUP",
+            "notes": "Move to here from 2801AP Effective 10/12/24",
+            "effDate": "2024-10-12"
+            },
+            {
+            "id": 60,
+            "chargeCode": "4118194.0002.2801.2801BW.452",
+            "slin": "2801BW",
+            "tpsId": "452",
+            "tpsName": "GUAM SITE ENGINEERING",
+            "notes": "Move to here from 2801AP Effective 10/12/24",
+            "effDate": "2024-10-12"
+            },
+            {
+            "id": 59,
+            "chargeCode": "4118194.0002.2801.2801BU.422",
+            "slin": "2801BU",
+            "tpsId": "422",
+            "tpsName": "DDG Waterfront ILS 3",
+            "notes": "Project number re-opened",
+            "effDate": "2024-10-17"
+            },
+            {
+            "id": 58,
+            "chargeCode": "4118194.0002.2801.2801BU.466",
+            "slin": "2801BU",
+            "tpsId": "466",
+            "tpsName": "CG ILS Backfit",
+            "effDate": "2024-09-28"
+            },
+            {
+            "id": 57,
+            "chargeCode": "4118194.0002.2801.2801BU.465",
+            "slin": "2801BU",
+            "tpsId": "465",
+            "tpsName": "USN Harvesting",
+            "effDate": "2024-09-28"
+            },
+            {
+            "id": 56,
+            "chargeCode": "4118194.0002.2801.2801AH.464",
+            "slin": "2801AH",
+            "tpsId": "464",
+            "tpsName": "Glide Phase Intercept Sup",
+            "effDate": "2024-09-28"
+            },
+            {
+            "id": 55,
+            "chargeCode": "4118194.0002.2801.2801AX.463",
+            "slin": "2801AX",
+            "tpsId": "463",
+            "tpsName": "BMD Fleet Sustainment",
+            "effDate": "2024-09-28"
+            },
+            {
+            "id": 54,
+            "chargeCode": "4118194.0002.2801.2801AJ.462",
+            "slin": "2801AJ",
+            "tpsId": "462",
+            "tpsName": "BMD 5.4/4.1 Cert PH2",
+            "effDate": "2024-09-28"
+            },
+            {
+            "id": 53,
+            "chargeCode": "4118194.0002.2801.2801AM.461",
+            "slin": "2801AM",
+            "tpsId": "461",
+            "tpsName": "BMD 5.1.6",
+            "effDate": "2024-09-28"
+            },
+            {
+            "id": 52,
+            "chargeCode": "4118194.0002.2801.2801BV.459",
+            "slin": "2801BV",
+            "tpsId": "459",
+            "tpsName": "BMD 5.1 SBT INC 2/3",
+            "effDate": "2024-09-28"
+            },
+            {
+            "id": 51,
+            "chargeCode": "4118194.0002.2801.2801AM.457",
+            "slin": "2801AM",
+            "tpsId": "457",
+            "tpsName": "BMD 6M",
+            "effDate": "2024-09-28"
+            },
+            {
+            "id": 50,
+            "chargeCode": "4118194.0002.2801.2801AL.456",
+            "slin": "2801AL",
+            "tpsId": "456",
+            "tpsName": "MDA MILSTRIP",
+            "effDate": "2024-09-28"
+            },
+            {
+            "id": 49,
+            "chargeCode": "4118194.0002.2801.2801AM.455",
+            "slin": "2801AM",
+            "tpsId": "455",
+            "tpsName": "BMD IN-SERVICE",
+            "effDate": "2024-09-28"
+            },
+            {
+            "id": 48,
+            "chargeCode": "4118194.0002.2801.2801AL.454",
+            "slin": "2801AL",
+            "tpsId": "454",
+            "tpsName": "GUAM SYSTEM ENG SUP",
+            "effDate": "2024-09-28"
+            },
+            {
+            "id": 47,
+            "chargeCode": "4118194.0002.2801.2801AH.451",
+            "slin": "2801AH",
+            "tpsId": "451",
+            "tpsName": "GUAM WS DEVEL ENG",
+            "effDate": "2024-09-28"
+            },
+            {
+            "id": 46,
+            "chargeCode": "4118194.0002.2801.2801BS.450",
+            "slin": "2801BS",
+            "tpsId": "450",
+            "tpsName": "AA Japan",
+            "effDate": "2024-09-28"
+            },
+            {
+            "id": 45,
+            "chargeCode": "4118194.0002.2801.2801AD.449",
+            "slin": "2801AD",
+            "tpsId": "449",
+            "tpsName": "SSDS  (RDT2)",
+            "effDate": "2024-09-28"
+            }
+        ];
+
+        var columnHeaders = [
+            {
+                field: "id",
+                headerText: "Id",
+                sortable: true
+            },
+            {
+                field: "chargeCode",
+                headerText: "Charge Code",
+                sortable: true
+            },
+            {
+                field: "slin",
+                headerText: "Slin",
+                sortable: true
+            },
+            {
+                field: "tpsId",
+                headerText: "TPS ID",
+                sortable: true
+            },
+            {
+                field: "tpsName",
+                headerText: "TPS Name",
+                sortable: true
+            },
+            {
+                field: "notes",
+                headerText: "Notes",
+                sortable: true
+            },
+            {
+                field: "effDate",
+                headerText: "Effetive Date",
+                sortable: true
+            },
+            {
+                field: "closedDate",
+                headerText: "Closed Date",
+                sortable: true
+            }
+        ];
+
+        var slinRows = [];
+
+        loadData(0, 10);
+
+        function loadData(pageNumber, pageSize){
+            var customers = [];
+            // $.ajax({
+            //     url: 'http://localhost:8092/api/slin-current/get-rows?' + 'pageNumber=' + pageNumber + '&pageSize=' + pageSize,
+            //     type: 'GET',
+            //     success: function(data) {
+            //         console.log('data');
+            //         console.log(data);
+            //         slinRows = data.content;;
+            //         displayTable();
+            //     }
+            // });
+
+            slinRows = backendData;
+            displayTable();
+        }
+
+        function displayTable(){
+            console.log('slinRows');
+            console.log(slinRows);
+
+            $('#currentSlinsTable').puidatatable({
+                columns: columnHeaders,
+                datasource: slinRows,
+                paginator: {
+                    rows: 10
+                }
+            });
+        }
+
+        $("#saveButton").click(function(){
+            var row = {
+                chargeCode: $('#chargeCode').val(),
+                slin: $('#slin').val(),
+                tpsId: $('#tpsId').val(),
+                tpsName: $('#tpsName').val(),
+                notes: $('#notes').val(),
+                effDate: $('#effDate').val(),
+                closedDate: $('#closedDate').val()
+            }
+            addUpdate(row);
+        });
+
+        function addUpdate(row){
+            console.log("row", row);
+            var payload = [row]
+            $.ajax({
+                url: 'http://localhost:8092/api/slin-current/add',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(payload),
+                success: function(data) {
+                    console.log('newly saved data', data);
+                    loadData(0, 10);
+                }
+            });
+        }
+
+        
+
+        // displayTable();
+    });
+</script>
+</body>
+</html>
