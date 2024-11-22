@@ -86,9 +86,13 @@
     </div> -->
 
     <div class="row mb-4">
-        <div class="col-12">
+        <div class="col-6">
             <button id="addButton" type="button">Add</button> <button id="saveButton" type="button">Save</button>
         </div>
+        <div class="col-6">
+            <div id="apiMessage"></div>  
+        </div>
+        
     </div>
 
     <div class="row">
@@ -106,6 +110,8 @@
 
     $(document).ready(function(){
         // call api to get all customers
+
+        $('#apiMessage').puimessages();
 
         $('#addButton').puibutton();
 
@@ -260,6 +266,9 @@
                 data: JSON.stringify(payload),
                 success: function(data) {
                     console.log('newly saved data', data);
+
+                    $('#apiMessage').puimessages('show', 'info', {summary: 'Successfully saved data', detail: ''});
+
                     loadData(0, 10);
                 }
             });
