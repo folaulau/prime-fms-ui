@@ -9,12 +9,10 @@
 <head>
     <title>Slins Mapping</title>
 
-    <link rel="stylesheet" href="/assets/primeui/themes/ui-lightness/theme.css" />
+    <!-- <link rel="stylesheet" href="/assets/primeui/themes/ui-lightness/theme.css" /> -->
     <!-- <link rel="stylesheet" href="/assets/primeui/primeui.css" /> -->
-    <link rel="stylesheet" href="/assets/jquery/jquery-ui.min.css" />
-    <link rel="stylesheet" href="/assets/primeui/primeui.min.css" />
-
     <link rel="stylesheet" href="/assets/primeicon/primeicons.css" />
+    <link rel="stylesheet" href="/assets/primeui/primeui.min.css" />
 
     <script type="text/javascript" src="/assets/jquery/jquery.min.js"></script>
     <script type="text/javascript" src="/assets/jquery/jquery-ui.min.js"></script>
@@ -26,7 +24,8 @@
     <!-- <link rel="stylesheet" href="/assets/bootstrap/css/bootstrap.min.css" /> -->
     <link rel="stylesheet" href="/assets/bootstrap/css/bootstrap-grid.min.css" />
     <!-- <script type="text/javascript" src="/assets/bootstrap/css/bootstrap-grid.css"></script>  -->
-    <!-- <script type="text/javascript" src="/assets/bootstrap/js/bootstrap.min.js"></script>  -->
+    <!-- <script type="text/javascript" src="/assets/bootstrap/js/bootstrap.min.js"></script> 
+    <script type="text/javascript" src="/assets/bootstrap/js/bootstrap.bundle.min.js"></script>  -->
 
 </head>
 <body>
@@ -38,7 +37,7 @@
             <h2>Slins Mapping</h2>
         </div>
     </div>
-    <div class="row">
+    <!-- <div class="row">
         <div class="col-12">
             <fieldset id="slinAddUpdateRow" style="margin-bottom:20px">
                 <legend>Add New</legend>
@@ -84,11 +83,11 @@
                 </div>
             </fieldset>
         </div>
-    </div>
+    </div> -->
 
     <div class="row mb-4">
         <div class="col-12">
-            
+            <button id="addButton" type="button">Add</button> <button id="saveButton" type="button">Save</button>
         </div>
     </div>
 
@@ -103,8 +102,12 @@
 
 
 <script type="text/javascript">
+
+
     $(document).ready(function(){
         // call api to get all customers
+
+        $('#addButton').puibutton();
 
         $('#in').puiinputtext();
 
@@ -112,7 +115,181 @@
 
         $('#saveButton').puibutton();
 
-        var backendData = [
+        var columnHeaders = [
+            {
+                field: "id",
+                headerText: "Id",
+                sortable: true,
+                editor: 'input'
+            },
+            {
+                field: "chargeCode",
+                headerText: "Charge Code",
+                sortable: true,
+                editor: 'input'
+            },
+            {
+                field: "slin",
+                headerText: "Slin",
+                sortable: true,
+                editor: 'input'
+            },
+            {
+                field: "tpsId",
+                headerText: "TPS ID",
+                sortable: true,
+                editor: 'input'
+            },
+            {
+                field: "tpsName",
+                headerText: "TPS Name",
+                sortable: true,
+                editor: 'input'
+            },
+            {
+                field: "notes",
+                headerText: "Notes",
+                sortable: true,
+                editor: 'input'
+            },
+            {
+                field: "effectiveDate",
+                headerText: "Effetive Date",
+                sortable: true,
+                editor: 'input'
+            },
+            {
+                field: "closedDate",
+                headerText: "Closed Date",
+                sortable: true,
+                editor: 'input'
+            }
+        ];
+
+        var slinRows = [];
+
+        loadData(0, 10);
+
+        var latestId = 0;
+
+        function loadData(pageNumber, pageSize){
+            var customers = [];
+            $.ajax({
+                url: 'http://localhost:8092/api/slin-current/get-rows?' + 'pageNumber=' + pageNumber + '&pageSize=' + pageSize,
+                type: 'GET',
+                success: function(data) {
+                    console.log('data');
+                    console.log(data);
+                    slinRows = data.content;
+                    latestId = Math.max(...slinRows.map(slinRow => slinRow.id));
+                    console.log(`latestId: `, latestId); // Output: 5
+
+                    displayTable();
+                }
+            });
+
+            // slinRows = backendData;
+            // displayTable();
+        }
+
+        var updatedRows = [];
+
+        function displayTable(){
+            console.log('slinRows');
+            console.log(slinRows);
+
+            $('#currentSlinsTable').puidatatable({
+                columns: columnHeaders,
+                datasource: slinRows,
+                editMode: 'cell',
+                cellEdit: function (event, data) {
+                    hanldeCellEdit(event, data);
+                },
+                paginator: {
+                    rows: 10
+                }
+            });
+        }
+
+        function hanldeCellEdit(event, data){
+            console.log("hanldeCellEdit");
+            console.log(`event `, event);
+            console.log(`data `, data);
+
+            // Extract the row data and ID
+            const editedRow = data.data;
+            const rowId = editedRow.id;
+
+            // Check if the row already exists in updatedRows
+            const existingIndex = updatedRows.findIndex(row => row.id === rowId);
+
+            if (existingIndex >= 0) {
+                // Replace the existing entry
+                updatedRows[existingIndex] = editedRow;
+                console.log(`Replaced existing row at index ${existingIndex} in updatedRows.`);
+            } else {
+                // Add the new row
+                updatedRows.push(editedRow);
+                console.log("Added new row to updatedRows.");
+            }
+
+            console.log("Updated updatedRows:", updatedRows);
+        }
+
+        $("#saveButton").click(function(){
+
+            console.log('save updatedRows', updatedRows);
+
+            updatedRows = updatedRows.map(row => {
+                if (String(row.id).startsWith("New Id")) {
+                    row.id = null;
+                }
+                return row;
+            });
+
+            addUpdate(updatedRows);
+        });
+
+        function addUpdate(rows){
+            console.log("rows", rows);
+            var payload = rows;
+            $.ajax({
+                url: 'http://localhost:8092/api/slin-current/add',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(payload),
+                success: function(data) {
+                    console.log('newly saved data', data);
+                    loadData(0, 10);
+                }
+            });
+        }
+
+        $("#addButton").click(function(){
+            console.log('add button clicked');
+            latestId++;
+            slinRows.unshift({
+                id: 'New Id '+latestId,
+                chargeCode: '',
+                slin: '',
+                tpsId: '',
+                tpsName: '',
+                notes: '',
+                effDate: '',
+                closedDate: ''
+            });
+
+            displayTable();
+            
+        });
+
+        
+
+        // displayTable();
+    });
+
+
+var backendData = [
             {
             "id": 64,
             "chargeCode": "4118194.0002.2801.2801BM.426",
@@ -281,115 +458,6 @@
             }
         ];
 
-        var columnHeaders = [
-            {
-                field: "id",
-                headerText: "Id",
-                sortable: true
-            },
-            {
-                field: "chargeCode",
-                headerText: "Charge Code",
-                sortable: true
-            },
-            {
-                field: "slin",
-                headerText: "Slin",
-                sortable: true
-            },
-            {
-                field: "tpsId",
-                headerText: "TPS ID",
-                sortable: true
-            },
-            {
-                field: "tpsName",
-                headerText: "TPS Name",
-                sortable: true
-            },
-            {
-                field: "notes",
-                headerText: "Notes",
-                sortable: true
-            },
-            {
-                field: "effDate",
-                headerText: "Effetive Date",
-                sortable: true
-            },
-            {
-                field: "closedDate",
-                headerText: "Closed Date",
-                sortable: true
-            }
-        ];
-
-        var slinRows = [];
-
-        loadData(0, 10);
-
-        function loadData(pageNumber, pageSize){
-            var customers = [];
-            // $.ajax({
-            //     url: 'http://localhost:8092/api/slin-current/get-rows?' + 'pageNumber=' + pageNumber + '&pageSize=' + pageSize,
-            //     type: 'GET',
-            //     success: function(data) {
-            //         console.log('data');
-            //         console.log(data);
-            //         slinRows = data.content;;
-            //         displayTable();
-            //     }
-            // });
-
-            slinRows = backendData;
-            displayTable();
-        }
-
-        function displayTable(){
-            console.log('slinRows');
-            console.log(slinRows);
-
-            $('#currentSlinsTable').puidatatable({
-                columns: columnHeaders,
-                datasource: slinRows,
-                paginator: {
-                    rows: 10
-                }
-            });
-        }
-
-        $("#saveButton").click(function(){
-            var row = {
-                chargeCode: $('#chargeCode').val(),
-                slin: $('#slin').val(),
-                tpsId: $('#tpsId').val(),
-                tpsName: $('#tpsName').val(),
-                notes: $('#notes').val(),
-                effDate: $('#effDate').val(),
-                closedDate: $('#closedDate').val()
-            }
-            addUpdate(row);
-        });
-
-        function addUpdate(row){
-            console.log("row", row);
-            var payload = [row]
-            $.ajax({
-                url: 'http://localhost:8092/api/slin-current/add',
-                type: 'POST',
-                contentType: 'application/json',
-                data: JSON.stringify(payload),
-                success: function(data) {
-                    console.log('newly saved data', data);
-                    loadData(0, 10);
-                }
-            });
-        }
-
-        
-
-        // displayTable();
-    });
 </script>
 </body>
 </html>
