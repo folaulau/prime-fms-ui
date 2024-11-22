@@ -242,9 +242,23 @@
             console.log("Updated updatedRows:", updatedRows);
         }
 
+        function showMessage(type, summary, detail){
+            $('#apiMessage').puimessages('show', type, {summary: summary, detail: detail});
+
+            // Hide the message after 2 seconds
+            setTimeout(function () {
+                $('#apiMessage').puimessages('clear');
+            }, 2000); // 2000 milliseconds = 2 seconds
+        }
+
         $("#saveButton").click(function(){
 
             console.log('save updatedRows', updatedRows);
+
+            if(updatedRows.length === 0){
+                showMessage('warn', 'No data to save', '');
+                return;
+            }
 
             updatedRows = updatedRows.map(row => {
                 if (String(row.id).startsWith("New Id")) {
@@ -266,9 +280,7 @@
                 data: JSON.stringify(payload),
                 success: function(data) {
                     console.log('newly saved data', data);
-
-                    $('#apiMessage').puimessages('show', 'info', {summary: 'Successfully saved data', detail: ''});
-
+                    showMessage('warn', 'Successfully saved data', '');
                     loadData(0, 10);
                     updatedRows = [];
                 }
