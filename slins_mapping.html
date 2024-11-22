@@ -280,7 +280,7 @@
                 data: JSON.stringify(payload),
                 success: function(data) {
                     console.log('newly saved data', data);
-                    showMessage('warn', 'Successfully saved data', '');
+                    showMessage('info', 'Successfully saved data', '');
                     loadData(0, 10);
                     updatedRows = [];
                 }
