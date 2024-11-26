@@ -34,7 +34,7 @@
     
     <div class="row">
         <div class="col-12 text-center">
-            <h2>Slins Mapping</h2>
+            <h2>SLIN to TPS ID Mapping</h2>
         </div>
     </div>
     <!-- <div class="row">
@@ -126,48 +126,56 @@
                 field: "id",
                 headerText: "Id",
                 sortable: true,
+                filter: true,
                 editor: 'input'
             },
             {
                 field: "chargeCode",
                 headerText: "Charge Code",
                 sortable: true,
+                filter: true,
                 editor: 'input'
             },
             {
                 field: "slin",
-                headerText: "Slin",
+                headerText: "SLIN",
                 sortable: true,
+                filter: true,
                 editor: 'input'
             },
             {
                 field: "tpsId",
                 headerText: "TPS ID",
                 sortable: true,
+                filter: true,
                 editor: 'input'
             },
             {
                 field: "tpsName",
                 headerText: "TPS Name",
                 sortable: true,
+                filter: true,
                 editor: 'input'
             },
             {
                 field: "notes",
                 headerText: "Notes",
                 sortable: true,
+                filter: true,
                 editor: 'input'
             },
             {
                 field: "effectiveDate",
                 headerText: "Effetive Date",
                 sortable: true,
+                filter: true,
                 editor: 'input'
             },
             {
                 field: "closedDate",
                 headerText: "Closed Date",
                 sortable: true,
+                filter: true,
                 editor: 'input'
             }
         ];
@@ -177,36 +185,62 @@
         loadData(0, 10);
 
         var latestId = 0;
+        var pageResults = {};
 
         function loadData(pageNumber, pageSize){
-            var customers = [];
-            $.ajax({
-                url: 'http://localhost:8092/api/slin-current/get-rows?' + 'pageNumber=' + pageNumber + '&pageSize=' + pageSize,
-                type: 'GET',
-                success: function(data) {
-                    console.log('data');
-                    console.log(data);
-                    slinRows = data.content;
-                    latestId = Math.max(...slinRows.map(slinRow => slinRow.id));
-                    console.log(`latestId: `, latestId); // Output: 5
+            // var customers = [];
+            // $.ajax({
+            //     url: 'http://localhost:8092/api/slin-current/get-rows?' + 'pageNumber=' + pageNumber + '&pageSize=' + pageSize,
+            //     type: 'GET',
+            //     success: function(data) {
+            //         console.log('data');
+            //         console.log(data);
+            //         slinRows = data.content;
+            //         pageResults = data;
+            //         latestId = Math.max(...slinRows.map(slinRow => slinRow.id));
+            //         console.log(`latestId: `, latestId); // Output: 5
 
-                    displayTable();
-                }
-            });
+            //         displayTable(pageNumber, pageSize);
+            //     }
+            // });
 
+            displayTable(pageNumber, pageSize);
             // slinRows = backendData;
             // displayTable();
         }
 
         var updatedRows = [];
 
-        function displayTable(){
+        function displayTable( pageNumber, pageSize){
             console.log('slinRows');
             console.log(slinRows);
 
             $('#currentSlinsTable').puidatatable({
+                lazy: true,
                 columns: columnHeaders,
-                datasource: slinRows,
+                datasource: function(callback, ui){
+                    console.log('ui', ui);
+
+                    $.ajax({
+                        url: 'http://localhost:8092/api/slin-current/get-rows?' + 'pageNumber=' + pageNumber + '&pageSize=' + pageSize,
+                        type: 'GET',
+                        context: this,
+                        dataType: 'json',
+                        success: function(response) {
+                            console.log('response');
+                            console.log(response);
+                            slinRows = response.content;
+                            pageResults = response;
+                            latestId = Math.max(...slinRows.map(slinRow => slinRow.id));
+                            console.log(`latestId: `, latestId); // Output: 5
+
+                            callback.call(this, response.content);
+
+                            // Update the paginator dynamically
+                            $('#currentSlinsTable').puidatatable('option', 'totalRecords', response.totalElements);
+                        }
+                    });
+                },
                 editMode: 'cell',
                 cellEdit: function (event, data) {
                     hanldeCellEdit(event, data);
