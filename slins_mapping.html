@@ -68,6 +68,10 @@
         #currentSlinsTable th:nth-child(8) { 
             width: 8%;
         }
+
+        .updated-row {
+            background-color: red !important;
+        }
     </style>
 </head>
 <body>
@@ -229,9 +233,11 @@
             console.log(slinRows);
 
             $('#currentSlinsTable').puidatatable({
+                responsive: true,
                 columns: columnHeaders,
                 datasource: slinRows,
                 paginator: { rows: 10 },
+                selectionMode: 'single',
                 editMode: 'cell',
                 cellEdit: hanldeCellEdit
             });
@@ -246,8 +252,12 @@
             const editedRow = data.data;
             const rowId = editedRow.id;
 
+            console.log("rowId:", rowId);
+
             // Check if the row already exists in updatedRows
             const existingIndex = updatedRows.findIndex(row => row.id === rowId);
+
+            console.log("existingIndex:", existingIndex);
 
             if (existingIndex >= 0) {
                 // Replace the existing entry
@@ -259,7 +269,19 @@
                 console.log("Added new row to updatedRows.");
             }
 
+            // Use the event's dataTable property to locate the row (event.rowIndex)
+            const rowIndex = event.rowIndex; // Row index from the event
+            console.log("rowIndex:", rowIndex);
+            const tableRows = $('#currentSlinsTable tbody tr'); // All rows in the table
+            console.log("tableRows:", tableRows);
+            const tableRow = tableRows[3]; // Find the corresponding row by index
+
+            if (tableRow) {
+                $(tableRow).addClass('updated-row'); // Add the `updated-row` class
+            }
+
             console.log("Updated updatedRows:", updatedRows);
+
         }
 
         function showMessage(type, summary, detail){
