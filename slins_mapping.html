@@ -252,7 +252,17 @@
             const editedRow = data.data;
             const rowId = editedRow.id;
 
-            console.log("rowId:", rowId);
+                // Get the DOM element of the edited cell
+            const targetCell = event.target;
+
+            // Find the parent row of the cell
+            const selectedTableRow = $(targetCell).closest('tr');
+
+            console.log("selectedTableRow:", selectedTableRow);
+
+            // Determine the row index
+            const selectedRowIndex = selectedTableRow.index();
+            console.log("selectedRowIndex:", selectedRowIndex);
 
             // Check if the row already exists in updatedRows
             const existingIndex = updatedRows.findIndex(row => row.id === rowId);
