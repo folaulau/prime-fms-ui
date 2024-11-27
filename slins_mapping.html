@@ -252,18 +252,6 @@
             const editedRow = data.data;
             const rowId = editedRow.id;
 
-                // Get the DOM element of the edited cell
-            const targetCell = event.target;
-
-            // Find the parent row of the cell
-            const selectedTableRow = $(targetCell).closest('tr');
-
-            console.log("selectedTableRow:", selectedTableRow);
-
-            // Determine the row index
-            const selectedRowIndex = selectedTableRow.index();
-            console.log("selectedRowIndex:", selectedRowIndex);
-
             // Check if the row already exists in updatedRows
             const existingIndex = updatedRows.findIndex(row => row.id === rowId);
 
@@ -282,6 +270,7 @@
             // Use the event's dataTable property to locate the row (event.rowIndex)
             const rowIndex = event.rowIndex; // Row index from the event
             console.log("rowIndex:", rowIndex);
+            
             const tableRows = $('#currentSlinsTable tbody tr'); // All rows in the table
             console.log("tableRows:", tableRows);
             const tableRow = tableRows[3]; // Find the corresponding row by index
