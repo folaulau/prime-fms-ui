@@ -127,6 +127,7 @@
                 headerText: "Id",
                 sortable: true,
                 filter: true,
+                filterMatchMode: 'contains',
                 editor: 'input'
             },
             {
@@ -134,6 +135,7 @@
                 headerText: "Charge Code",
                 sortable: true,
                 filter: true,
+                filterMatchMode: 'contains',
                 editor: 'input'
             },
             {
@@ -141,6 +143,7 @@
                 headerText: "SLIN",
                 sortable: true,
                 filter: true,
+                filterMatchMode: 'contains',
                 editor: 'input'
             },
             {
@@ -148,6 +151,7 @@
                 headerText: "TPS ID",
                 sortable: true,
                 filter: true,
+                filterMatchMode: 'contains',
                 editor: 'input'
             },
             {
@@ -155,6 +159,7 @@
                 headerText: "TPS Name",
                 sortable: true,
                 filter: true,
+                filterMatchMode: 'contains',
                 editor: 'input'
             },
             {
@@ -162,6 +167,7 @@
                 headerText: "Notes",
                 sortable: true,
                 filter: true,
+                filterMatchMode: 'contains',
                 editor: 'input'
             },
             {
@@ -169,6 +175,7 @@
                 headerText: "Effetive Date",
                 sortable: true,
                 filter: true,
+                filterMatchMode: 'contains',
                 editor: 'input'
             },
             {
@@ -176,22 +183,32 @@
                 headerText: "Closed Date",
                 sortable: true,
                 filter: true,
+                filterMatchMode: 'contains',
                 editor: 'input'
             }
         ];
 
         var slinRows = [];
 
-        loadData(0, 10);
+        var pageNumber = 0;
+        var pageSize = 100;
+
+        loadData(pageNumber, pageSize);
 
         var latestId = 0;
         var pageResults = {};
 
         function loadData(pageNumber, pageSize){
-            // var customers = [];
+            var customers = [];
+            var pagination = {
+                pageNumber: pageNumber,
+                pageSize: pageSize
+            };
             // $.ajax({
-            //     url: 'http://localhost:8092/api/slin-current/get-rows?' + 'pageNumber=' + pageNumber + '&pageSize=' + pageSize,
-            //     type: 'GET',
+            //     url: 'http://localhost:8092/api/slin-current/search',
+            //     type: 'POST',
+            //     contentType: 'application/json',
+            //     data: JSON.stringify(pagination),
             //     success: function(data) {
             //         console.log('data');
             //         console.log(data);
@@ -201,12 +218,14 @@
             //         console.log(`latestId: `, latestId); // Output: 5
 
             //         displayTable(pageNumber, pageSize);
+            //     },
+            //     error: function(xhr, status, error) {
+            //         console.error('Error:', error);
             //     }
             // });
 
+            slinRows = backendData;
             displayTable(pageNumber, pageSize);
-            // slinRows = backendData;
-            // displayTable();
         }
 
         var updatedRows = [];
@@ -216,38 +235,11 @@
             console.log(slinRows);
 
             $('#currentSlinsTable').puidatatable({
-                lazy: true,
                 columns: columnHeaders,
-                datasource: function(callback, ui){
-                    console.log('ui', ui);
-
-                    $.ajax({
-                        url: 'http://localhost:8092/api/slin-current/get-rows?' + 'pageNumber=' + pageNumber + '&pageSize=' + pageSize,
-                        type: 'GET',
-                        context: this,
-                        dataType: 'json',
-                        success: function(response) {
-                            console.log('response');
-                            console.log(response);
-                            slinRows = response.content;
-                            pageResults = response;
-                            latestId = Math.max(...slinRows.map(slinRow => slinRow.id));
-                            console.log(`latestId: `, latestId); // Output: 5
-
-                            callback.call(this, response.content);
-
-                            // Update the paginator dynamically
-                            $('#currentSlinsTable').puidatatable('option', 'totalRecords', response.totalElements);
-                        }
-                    });
-                },
+                datasource: slinRows,
+                paginator: { rows: 10 },
                 editMode: 'cell',
-                cellEdit: function (event, data) {
-                    hanldeCellEdit(event, data);
-                },
-                paginator: {
-                    rows: 10
-                }
+                cellEdit: hanldeCellEdit
             });
         }
 
