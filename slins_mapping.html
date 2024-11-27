@@ -237,11 +237,55 @@
                 columns: columnHeaders,
                 datasource: slinRows,
                 paginator: { rows: 10 },
-                selectionMode: 'single',
                 editMode: 'cell',
                 cellEdit: hanldeCellEdit
             });
         }
+
+        function isUnchangedRow(obj) {
+            for (let key in obj) {
+                if (obj.hasOwnProperty(key)) { // Ensure it's a direct property of the object
+                    const field = obj[key];
+                    if (field.initialValue !== field.value) {
+                        return false; // If any field has a different value, return false
+                    }
+                }
+            }
+            return true; // If all pairs are equal, return true
+        }
+
+        var updatedRowData = {};
+
+        function updateRowData(rowId, column, oldValue, newValue){
+            let row = updatedRowData[rowId];
+            if(row === undefined){
+                row = {};
+            }
+
+            if(row[column] === undefined){
+                row[column] = {};
+                row[column]['initialValue'] = oldValue;
+            }
+
+            let initialValue = row[column]['initialValue'];
+
+            console.log("initialValue", initialValue);
+            console.log("newValue", newValue);
+
+            row[column]['value'] = newValue;
+
+            if(initialValue === newValue){
+                // no change
+                return !isUnchangedRow(row);
+            }
+            
+            updatedRowData[rowId] = row;
+
+            console.log("row", row);
+
+            return true;
+        }
+
 
         function hanldeCellEdit(event, data){
             console.log("hanldeCellEdit");
@@ -280,11 +324,15 @@
                 return id === String(editedRow.id); // Match the `id` attribute with the edited row ID
             });
 
+            let isUpdated = updateRowData(rowId, data.field, data.oldValue, data.newValue);
 
-            if (matchingRow.length > 0) {
+            console.log("isUpdated ", isUpdated);
+
+            if (isUpdated && matchingRow.length > 0) {
                 $(matchingRow).addClass('updated-row'); // Add the `updated-row` class
                 console.log("Row highlighted:", matchingRow);
             } else {
+                $(matchingRow).removeClass('updated-row');
                 console.warn("No matching row found for ID:", editedRow.id);
             }
 
