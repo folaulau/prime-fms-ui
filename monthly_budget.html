@@ -151,7 +151,7 @@
 
         function loadEmployees(){
 
-          getEmployeesWithHours(126,'2024-10').then(data => {
+          getEmployeesWithHoursFromApi(126,'2024-10').then(data => {
             console.log("data", data);
             slinRows = data;
             displayTable();
@@ -208,6 +208,24 @@
             console.log("hanldeCellEdit");
             console.log(`event `, event);
             console.log(`data `, data);
+            updateEmployeeHours(data);
+        }
+
+        function updateEmployeeHours(row){
+            console.log("row", row);
+            var payload = {
+              period:row.data.period,
+              tpsId:row.field,
+              employeeUid:row.data.employeeUid,
+              hours:row.newValue
+            };
+            console.log("payload", payload);
+            updateEmployeeHoursFromApi(payload).then(data => {
+                console.log("data", data);
+                showMessage('success', 'Data saved', '');
+            });
+            
+            
         }
 
         function showMessage(type, summary, detail){
@@ -237,23 +255,6 @@
 
             addUpdate(updatedRows);
         });
-
-        function addUpdate(rows){
-            console.log("rows", rows);
-            var payload = rows;
-            $.ajax({
-                url: 'http://localhost:8092/api/slin-current/add',
-                type: 'POST',
-                contentType: 'application/json',
-                data: JSON.stringify(payload),
-                success: function(data) {
-                    console.log('newly saved data', data);
-                    showMessage('info', 'Successfully saved data', '');
-                    loadData(0, 10);
-                    updatedRows = [];
-                }
-            });
-        }
 
         $("#addButton").click(function(){
             console.log('add button clicked');

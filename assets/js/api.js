@@ -19,7 +19,7 @@ function getTableHeadersFromApi() {
     });
 }
 
-function getEmployeesWithHours(supervisorUid, period) {
+function getEmployeesWithHoursFromApi(supervisorUid, period) {
     return new Promise((resolve, reject) => {
         $.ajax({
             url: apiDomain+'/a1-wad/get-per-period?period='+period+'&supervisorUid='+supervisorUid,
@@ -37,12 +37,13 @@ function getEmployeesWithHours(supervisorUid, period) {
 }
 
 
-function updateEmployeeHours(supervisorUid, period) {
+function updateEmployeeHoursFromApi(payload) {
     return new Promise((resolve, reject) => {
         $.ajax({
-            url: apiDomain+'/a1-wad/get-per-period?period='+period+'&supervisorUid='+supervisorUid,
-            type: 'GET',
+            url: apiDomain+'/a1-wad/update-employee-tps-hours',
+            type: 'PUT',
             contentType: 'application/json',
+            data: JSON.stringify(payload),
             success: function(data) {
                 resolve(data); // Resolve the promise with the data
             },
