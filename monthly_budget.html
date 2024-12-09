@@ -28,7 +28,18 @@
     <script type="text/javascript" src="/assets/bootstrap/js/bootstrap.bundle.min.js"></script>  -->
 
     <style>
+        /* Id */
+        #monthlyBudget th {
+            width: 12%;
+        }
 
+        /* #monthlyBudget th:nth-child(1) {
+            width: 20%;
+        } */
+
+        .updated-row {
+            background-color: red !important;
+        }
     </style>
 </head>
 <body>
@@ -52,7 +63,7 @@
 
     <div class="row">
         <div class="col-12">
-            <p id="currentSlinsTable"></p>
+            <p id="monthlyBudget"></p>
         </div>
     </div>
 </div>
@@ -79,6 +90,7 @@
 
         var pageNumber = 0;
         var pageSize = 100;
+        var supervisorUid = 126;
 
         loadData(pageNumber, pageSize);
 
@@ -113,7 +125,7 @@
             }
           ];
 
-          var backendHeaderColumns = getTableHeadersFromApi().then(data => {
+          var backendHeaderColumns = getTableHeadersFromApi(supervisorUid).then(data => {
             console.log("dataxx", data);
 
             data.forEach(column => {
@@ -139,8 +151,9 @@
 
         function displayTable(){
 
-            $('#currentSlinsTable').puidatatable({
-                responsive: true,
+            $('#monthlyBudget').puidatatable({
+                scrollable: true,
+                scrollWidth: '100%',
                 columns: columnHeaders,
                 datasource: slinRows,
                 paginator: { rows: 10 },

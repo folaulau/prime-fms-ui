@@ -1,13 +1,13 @@
 var apiDomain = 'http://localhost:8092/api';
 
-function getTableHeadersFromApi() {
+function getTableHeadersFromApi(supervisorUid) {
     return new Promise((resolve, reject) => {
         $.ajax({
-            url: apiDomain+'/a1-wad/get-table-headers',
+            url: apiDomain+'/a1-wad/get-table-headers?supervisorUid='+supervisorUid,
             type: 'GET',
             contentType: 'application/json',
             success: function(data) {
-                console.log('data');
+                console.log('table-headers data');
                 console.log(data);
                 resolve(data); // Resolve the promise with the data
             },
