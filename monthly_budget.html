@@ -28,18 +28,7 @@
     <script type="text/javascript" src="/assets/bootstrap/js/bootstrap.bundle.min.js"></script>  -->
 
     <style>
-        /* Id */
-        #monthlyBudget th {
-            width: 12%;
-        }
 
-        /* #monthlyBudget th:nth-child(1) {
-            width: 20%;
-        } */
-
-        .updated-row {
-            background-color: red !important;
-        }
     </style>
 </head>
 <body>
@@ -63,7 +52,7 @@
 
     <div class="row">
         <div class="col-12">
-            <p id="monthlyBudget"></p>
+            <p id="currentSlinsTable"></p>
         </div>
     </div>
 </div>
@@ -113,6 +102,11 @@
                 sortable: true
             },
             {
+                field: "targetHours",
+                headerText: "Target Hours",
+                sortable: true
+            },
+            {
                 field: "totalAssignedHours",
                 headerText: "Total Assigned",
                 sortable: true,
@@ -126,16 +120,22 @@
           ];
 
           var backendHeaderColumns = getTableHeadersFromApi(supervisorUid).then(data => {
-            console.log("dataxx", data);
+            console.log("backend header data", data);
 
             data.forEach(column => {
-              columnHeaders.push({
+                let col = {
                   field: column.headerName,
                   headerText: column.headerDisplay,
-                  sortable: true,
-                  editor: 'input'
-              });
+                  sortable: true
+              }
+
+              if(column.editable){
+                col['edit'] = 'input'
+              }
+              columnHeaders.push(col);
             });
+
+            console.log("columnHeaders", columnHeaders);
 
             displayTable();
 
@@ -151,9 +151,8 @@
 
         function displayTable(){
 
-            $('#monthlyBudget').puidatatable({
-                scrollable: true,
-                scrollWidth: '100%',
+            $('#currentSlinsTable').puidatatable({
+                responsive: true,
                 columns: columnHeaders,
                 datasource: slinRows,
                 paginator: { rows: 10 },
@@ -164,8 +163,8 @@
 
         function loadEmployees(){
 
-          getEmployeesWithHoursFromApi(126,'2024-10').then(data => {
-            console.log("data", data);
+          getEmployeesWithHoursFromApi(supervisorUid,'2024-10').then(data => {
+            console.log("employee hours", data);
             slinRows = data;
             displayTable();
           });
