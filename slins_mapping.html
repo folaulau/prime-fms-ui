@@ -98,12 +98,12 @@
             <p id="currentSlinsTable"></p>
         </div>
     </div>
-    <hr/>
+    <!-- <hr/>
     <div class="row">
         <div class="col-12">
             <p id="slinDataTable"></p>
         </div>
-    </div>
+    </div> -->
 </div>
 
 
@@ -259,7 +259,7 @@
                     console.log(data);
                     slinRows = data.content;
                     pageResults = data;
-                    latestId = Math.max(...slinRows.map(slinRow => slinRow.id));
+                    latestId = Math.max(...slinRows.map(slinRow => slinRow.slinUid));
                     console.log(`latestId: `, latestId); // Output: 5
 
                     displayTable(pageNumber, pageSize);
@@ -448,7 +448,7 @@
             console.log('add button clicked');
             latestId++;
             slinRows.unshift({
-                id: 'New Id '+latestId,
+                slinUid: 'New Id '+latestId,
                 chargeCode: '',
                 slin: '',
                 tpsId: '',
