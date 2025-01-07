@@ -196,7 +196,7 @@
         var slinRows = [];
         var updatedRows = [];
         var pageNumber = 0;
-        var pageSize = 100;
+        var pageSize = 1000;
 
         loadData(pageNumber, pageSize);
 
@@ -401,7 +401,7 @@
                 success: function(data) {
                     console.log('newly saved data', data);
                     showMessage('info', 'Successfully saved data', '');
-                    loadData(0, 10);
+                    loadData(pageNumber, pageSize);
                     updatedRows = [];
                 }
             });
