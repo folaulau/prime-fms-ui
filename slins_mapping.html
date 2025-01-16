@@ -72,6 +72,10 @@
         }
 
         .updated-row {
+            background-color: rgb(205, 197, 197) !important;
+        }
+
+        .invalid-date-format-cell {
             background-color: red !important;
         }
     </style>
@@ -82,17 +86,21 @@
     
     <div class="row">
         <div class="col-12 text-center">
-            <h2>SLIN to TPS ID Mapping</h2>
+            <h2>TPS ID Mapping</h2>
         </div>
     </div>
-    <div class="row mb-4">
-        <div class="col-6">
+    <div class="row">
+        <div class="col-8">
+            <ul>
+                <li>Effective Date is required</li>
+                <li>Effective Date must be in yyyy-mm-dd format. i.e 2025-02-20</li>
+                <li>Closed Date must be in yyyy-mm-dd format. i.e 2025-02-20</li>
+            </ul>
             <button id="addButton" type="button">Add</button> <button id="saveButton" type="button">Save</button>
         </div>
-        <div class="col-6">
-            <div id="apiMessage"></div>  
+        <div class="col-4">
+            <div id="apiMessage"></div>
         </div>
-        
     </div>
 
     <div class="row">

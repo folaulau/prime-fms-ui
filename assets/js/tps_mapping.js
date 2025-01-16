@@ -194,8 +194,50 @@ $(document).ready(function(){
         console.log("Updated updatedRows:", updatedRows);
 
         // Extract the row data and ID
+        const fieldName = data.field;
         const editedRow = data.data;
         const rowUid = editedRow.uid;
+
+        const table = $('#currentSlinsTable'); // Ensure this matches your table's ID or selector
+        const tableRows = table.find('tbody tr'); // Get all rows in the table
+
+        const matchingRow = tableRows.filter((index, row) => {
+            // console.log("row", row);
+            // console.log("$row", $(row));
+            const firstCell = $(row).find('td:first');
+            // console.log("firstCell", firstCell);
+            // console.log("firstCell.text()", firstCell.text());
+            id = firstCell.text().replace(/\D/g, ""); // Extract the ID from the first cell
+            return id === String(editedRow.uid); // Match the `id` attribute with the edited row ID
+        });
+
+          // Check and validate Effective Date or Closed Date format
+        if (fieldName === 'effectiveDate' || fieldName === 'closedDate') {
+            let dateValue = data.newValue;
+
+            const cellIndex = columnHeaders.findIndex(header => header.field === fieldName);
+            console.log(`cellIndex:`, cellIndex);
+            const dateCell = matchingRow.find(`td:eq(${cellIndex})`);
+            console.log(`Specific Cell for ${fieldName}:`, dateCell);
+
+            if (!isValidDate(dateValue)) {
+                // Highlight invalid cells
+                dateCell.addClass('invalid-date-format-cell');
+                showMessage('error', 'Invalid Date Format', 'Please enter a valid date format (yyyy-mm-dd)');
+                // return;
+            } else {
+                dateCell.removeClass('invalid-date-format-cell');
+            }
+        }
+
+        // // if fieldName is effectiveDate or closedDate, validate the format of the date
+        // if(fieldName === 'effectiveDate' || fieldName === 'closedDate'){
+        //     let dateValue = data.newValue;
+        //     if(!isValidDate(dateValue)){
+        //         showMessage('error', 'Invalid Date Format', 'Please enter a valid date format (yyyy-mm-dd)');
+        //         return;
+        //     }
+        // }
 
         // Check if the row already exists in updatedRows
         const existingIndex = updatedRows.findIndex(row => row != undefined && row != null && row.uid === rowUid);
@@ -212,18 +254,7 @@ $(document).ready(function(){
             console.log("Added new row to updatedRows.");
         }
 
-        const table = $('#currentSlinsTable'); // Ensure this matches your table's ID or selector
-        const tableRows = table.find('tbody tr'); // Get all rows in the table
 
-        const matchingRow = tableRows.filter((index, row) => {
-            // console.log("row", row);
-            // console.log("$row", $(row));
-            const firstCell = $(row).find('td:first');
-            // console.log("firstCell", firstCell);
-            // console.log("firstCell.text()", firstCell.text());
-            id = firstCell.text().replace(/\D/g, ""); // Extract the ID from the first cell
-            return id === String(editedRow.uid); // Match the `id` attribute with the edited row ID
-        });
 
         let isUpdated = updateRowData(rowUid, data.field, data.oldValue, data.newValue);
 
@@ -241,24 +272,64 @@ $(document).ready(function(){
 
     }
 
-    function showMessage(type, summary, detail){
+    function isValidDate(dateString){
+        if(dateString === null || dateString === undefined || dateString === ''){
+            return true;
+        }
+        var regEx = /^\d{4}-\d{2}-\d{2}$/;
+        if(!dateString.match(regEx)){
+            return false;
+        }
+        return true
+    }
+
+    function showMessage(type, summary, detail, duration){
         $('#apiMessage').puimessages('show', type, {summary: summary, detail: detail});
+
+        if(duration === undefined || duration === null){
+            duration = 2000;
+        }
 
         // Hide the message after 2 seconds
         setTimeout(function () {
             $('#apiMessage').puimessages('clear');
-        }, 2000); // 2000 milliseconds = 2 seconds
+        }, duration); // 2000 milliseconds = 2 seconds
     }
 
     $("#saveButton").click(function(){
 
         console.log('save updatedRows', updatedRows);
 
-        if(updatedRows.length === 0){
-            showMessage('warn', 'No data to save', '');
+        // if(updatedRows.length === 0){
+        //     showMessage('warn', 'No valid data to save', '');
+        //     return;
+        // }
+        
+        var errorMessages = '';
+        updatedRows.forEach(row => {
+            let effectiveDate = row.effectiveDate;
+            if(effectiveDate !== null && effectiveDate !== undefined && effectiveDate !== ''){
+                if(!isValidDate(effectiveDate)){
+                    errorMessages += `Invalid Effective Date format for row with UID: ${row.uid}. Please enter a valid date format (yyyy-mm-dd)`;
+                }
+            }
+
+            let closedDate = row.closedDate;
+            if(closedDate !== null && closedDate !== undefined && closedDate !== ''){
+                if(!isValidDate(closedDate)){
+                    errorMessages += `Invalid Effective Date format for row with UID: ${row.uid}. Please enter a valid date format (yyyy-mm-dd)`;
+                }
+            }
+        });
+
+        console.log("errorMessages: "+ errorMessages);
+
+        if(errorMessages !== ''){
+            console.log("show errorMessages: "+ errorMessages);
+            showMessage('error', 'Invalid Date Format', errorMessages, 999999);
             return;
         }
-
+        
         updatedRows = updatedRows.map(row => {
             if (String(row.uid).startsWith("New Id")) {
               row.uid = null;
@@ -272,7 +343,7 @@ $(document).ready(function(){
     function addUpdate(rows){
         console.log("rows", rows);
         var payload = rows;
-        updateSlinTpsMapping().then(data => {
+        updateSlinTpsMapping(payload).then(data => {
             console.log('newly saved data', data);
             showMessage('info', 'Successfully saved data', '');
             loadData(pageNumber, pageSize);
