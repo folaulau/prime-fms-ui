@@ -310,14 +310,14 @@ $(document).ready(function(){
             let effectiveDate = row.effectiveDate;
             if(effectiveDate !== null && effectiveDate !== undefined && effectiveDate !== ''){
                 if(!isValidDate(effectiveDate)){
-                    errorMessages += `Invalid Effective Date format for row with UID: ${row.uid}. Please enter a valid date format (yyyy-mm-dd)`;
+                    errorMessages += `Invalid Effective Date format for row with UID: ${row.uid}<br/>`;
                 }
             }
 
             let closedDate = row.closedDate;
             if(closedDate !== null && closedDate !== undefined && closedDate !== ''){
                 if(!isValidDate(closedDate)){
-                    errorMessages += `Invalid Effective Date format for row with UID: ${row.uid}. Please enter a valid date format (yyyy-mm-dd)`;
+                    errorMessages += `Invalid Closed Date format for row with UID: ${row.uid}<br/>`;
                 }
             }
         });
@@ -326,10 +326,10 @@ $(document).ready(function(){
 
         if(errorMessages !== ''){
             console.log("show errorMessages: "+ errorMessages);
-            showMessage('error', 'Invalid Date Format', errorMessages, 999999);
+            showMessage('error', 'Invalid Values', errorMessages, 999999);
             return;
         }
-        
+
         updatedRows = updatedRows.map(row => {
             if (String(row.uid).startsWith("New Id")) {
               row.uid = null;
