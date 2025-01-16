@@ -308,7 +308,9 @@ $(document).ready(function(){
         var errorMessages = '';
         updatedRows.forEach(row => {
             let effectiveDate = row.effectiveDate;
-            if(effectiveDate !== null && effectiveDate !== undefined && effectiveDate !== ''){
+            if(effectiveDate === null || effectiveDate === undefined || effectiveDate.trim() === ''){
+                errorMessages += `Effective Date is required for row with UID: ${row.uid}<br/>`;
+            }else if(effectiveDate !== null && effectiveDate !== undefined && effectiveDate !== ''){
                 if(!isValidDate(effectiveDate)){
                     errorMessages += `Invalid Effective Date format for row with UID: ${row.uid}<br/>`;
                 }
@@ -326,7 +328,7 @@ $(document).ready(function(){
 
         if(errorMessages !== ''){
             console.log("show errorMessages: "+ errorMessages);
-            showMessage('error', 'Invalid Values', errorMessages, 999999);
+            showMessage('error', '', errorMessages, 999999);
             return;
         }
 
