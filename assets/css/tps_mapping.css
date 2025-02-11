@@ -1,0 +1,51 @@
+        /* Id */
+        #currentSlinsTable th:nth-child(1) {
+            width: 6%;
+        }
+
+        /* Charge Code */
+        #currentSlinsTable th:nth-child(2) {
+            width: 20%;
+        }
+
+        /* SLIN */
+        #currentSlinsTable th:nth-child(3) {
+            width: 6%;
+        }
+
+        /* TPS ID */
+        #currentSlinsTable th:nth-child(4) { 
+            width: 6%;
+        }
+
+        /* TPS Name */
+        #currentSlinsTable th:nth-child(5) { 
+            width: 20%;
+        }
+
+        /* Notes */
+        #currentSlinsTable th:nth-child(6) { 
+            width: 24%;
+        }
+
+        /* Effective Date */
+        #currentSlinsTable th:nth-child(7) { 
+            width: 10%;
+        }
+
+        /* Closed Date */
+        #currentSlinsTable th:nth-child(8) { 
+            width: 8%;
+        }
+
+        .tps-mapping-updated-row {
+            background-color: rgb(205, 197, 197) !important;
+        }
+
+        .tps-mapping-invalid-date-format-cell {
+            background-color: red !important;
+        }
+
+        #addButton{
+            background-color: aqua;
+        }

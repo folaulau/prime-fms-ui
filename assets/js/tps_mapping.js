@@ -125,7 +125,7 @@ $(document).ready(function(){
             responsive: true,
             columns: columnHeaders,
             datasource: slinRows,
-            paginator: { rows: 10 },
+            paginator: { rows: 20},
             editMode: 'cell',
             cellEdit: hanldeCellEdit
         });
@@ -222,11 +222,11 @@ $(document).ready(function(){
 
             if (!isValidDate(dateValue)) {
                 // Highlight invalid cells
-                dateCell.addClass('invalid-date-format-cell');
+                dateCell.addClass('tps-mapping-invalid-date-format-cell');
                 showMessage('error', 'Invalid Date Format', 'Please enter a valid date format (yyyy-mm-dd)');
                 // return;
             } else {
-                dateCell.removeClass('invalid-date-format-cell');
+                dateCell.removeClass('tps-mapping-invalid-date-format-cell');
             }
         }
 
@@ -261,10 +261,10 @@ $(document).ready(function(){
         console.log("isUpdated ", isUpdated);
 
         if (isUpdated && matchingRow.length > 0) {
-            $(matchingRow).addClass('updated-row'); // Add the `updated-row` class
+            $(matchingRow).addClass('tps-mapping-updated-row'); // Add the `updated-row` class
             console.log("Row highlighted:", matchingRow);
         } else {
-            $(matchingRow).removeClass('updated-row');
+            $(matchingRow).removeClass('tps-mapping-updated-row');
             console.warn("No matching row found for ID:", editedRow.uid);
         }
 
@@ -344,8 +344,7 @@ $(document).ready(function(){
 
     function addUpdate(rows){
         console.log("rows", rows);
-        var payload = rows;
-        updateSlinTpsMapping(payload).then(data => {
+        updateSlinTpsMapping(rows).then(data => {
             console.log('newly saved data', data);
             showMessage('info', 'Successfully saved data', '');
             loadData(pageNumber, pageSize);
