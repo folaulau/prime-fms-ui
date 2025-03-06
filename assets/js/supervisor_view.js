@@ -1,8 +1,6 @@
 
 $(document).ready(function(){
-    // call api to get all customers
 
-    $('#apiMessage').puimessages();
 
     $('#addButton').puibutton();
 
