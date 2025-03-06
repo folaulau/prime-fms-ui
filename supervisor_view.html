@@ -144,14 +144,14 @@
 
 
         // tps list
-        var links = [
+        var tpsIds = [
             { text: "Google", url: "https://www.google.com" },
             { text: "YouTube", url: "https://www.youtube.com" },
             { text: "GitHub", url: "https://www.github.com" },
             { text: "Stack Overflow", url: "https://stackoverflow.com" }
         ];
 
-        links.forEach(function(link) {
+        tpsIds.forEach(function(link) {
             $('#tpsList').append('<a href="' + link.url + '" target="_blank">' + link.text + '</a><br/>');
         });
     });
