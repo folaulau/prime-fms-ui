@@ -60,13 +60,107 @@
             </div>
         </div>
     </div>
+    <br/>
+    <br/>
+    <div class="row">
+        <div class="col-12">
+            <div class="row">
+                <div class="col-12">
+                    <ul>
+                        <li>Create Zero WADs for all employees under a supervisor</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <div class="row">
+                        <div class="col-12">
+                            Supervisor Uid: <input id="createWADSupervisorUidAndTPSId_supUid_Input" type="number" />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            TPS Id: <input id="createWADSupervisorUidAndTPSId_supUid_Input" type="number" />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <button id="createWADForSupervisorAndTPSIdBtn" type="button">Create WAD</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br/>
+    <br/>
+    <div class="row">
+        <div class="col-12">
+            <div class="row">
+                <div class="col-12">
+                    <ul>
+                        <li>Create Zero WADs for a TPS Id. Create WADs for all employees</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <input id="createWADTpsIdInput" type="number" /> <button id="createWADTpsIdBtn" type="button">Create WAD</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 
 
 
 <script type="text/javascript">
-    
+
+$(document).ready(function(){
+
+
+$('#apiMessage').puimessages();
+var apiDomain = 'http://localhost:8092/api';
+
+$("#createWADTpsIdBtn").click(function(){
+    console.log("createWADTpsIdBtn clicked! ");
+    let tpsId = $("#createWADTpsIdInput").val();
+    console.log("tpsId ", tpsId);
+
+    let requestPayload = {
+        tpsId: tpsId
+    };
+
+    $.ajax({
+        url: apiDomain+'/employees/create-wad/for-tps-id',
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify(requestPayload),
+        success: function(data) {
+            console.log(data);
+            showMessage('info', 'Successfully created WAD', '',2000);
+        },
+        error: function(xhr, status, error) {
+            console.error('Error:', error);
+            showMessage('error', '', errorMessages, 999999);
+        }
+    });
+});
+
+function showMessage(type, summary, detail, duration){
+    $('#apiMessage').puimessages('show', type, {summary: summary, detail: detail});
+
+    if(duration === undefined || duration === null){
+        duration = 2000;
+    }
+
+    // Hide the message after 2 seconds
+    setTimeout(function () {
+        $('#apiMessage').puimessages('clear');
+    }, duration); // 2000 milliseconds = 2 seconds
+}
+});
 </script>
 </body>
 </html>

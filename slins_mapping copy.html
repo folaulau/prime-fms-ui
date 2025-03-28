@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+<head>
+    <title>Slins Mapping</title>
+
+    <!-- <link rel="stylesheet" href="/assets/primeui/themes/ui-lightness/theme.css" /> -->
+    <!-- <link rel="stylesheet" href="/assets/primeui/primeui.css" /> -->
+    <link rel="stylesheet" href="/assets/primeicon/primeicons.css" />
+    <link rel="stylesheet" href="/assets/primeui/primeui.min.css" />
+
+    <script type="text/javascript" src="/assets/jquery/jquery.3.3.1.min.js"></script>
+    <script type="text/javascript" src="/assets/jquery/jquery-ui.1.12.min.js"></script>
+    <script type="text/javascript" src="/assets/primeui/primeui.min.js"></script>
+
+    <!-- <link rel="stylesheet" href="/assets/bootstrap/css/bootstrap.min.css" />-->
+    <!-- <link rel="stylesheet" href="/assets/primeui/themes/glass-x/theme.css" /> -->
+    <link rel="stylesheet" href="/assets/primeui/themes/omega/theme.css" />
+    <!-- <link rel="stylesheet" href="/assets/bootstrap/css/bootstrap.min.css" /> -->
+    <!-- <link rel="stylesheet" href="/assets/bootstrap/css/bootstrap-grid.min.css" /> -->
+    <!-- <script type="text/javascript" src="/assets/bootstrap/css/bootstrap-grid.css"></script>  -->
+    <!-- <script type="text/javascript" src="/assets/bootstrap/js/bootstrap.min.js"></script> 
+    <script type="text/javascript" src="/assets/bootstrap/js/bootstrap.bundle.min.js"></script>  -->
+
+    <script type="text/javascript" src="/assets/js/tps_mapping_api.js"></script>
+    <script type="text/javascript" src="/assets/js/tps_mapping.js"></script>
+    <link rel="stylesheet" href="assets/css/tps_mapping.css"/>
+</head>
+<body>
+
+<div class="ms-5 me-5">
+    
+    <div class="row">
+        <div class="col-12 text-center">
+            <h2>TPS ID Mapping</h2>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-8">
+            <ul>
+                <li>Effective Date is required</li>
+                <li>Effective Date must be in yyyy-mm-dd format. i.e 2025-02-20</li>
+                <li>Closed Date must be in yyyy-mm-dd format. i.e 2025-02-20</li>
+            </ul>
+            <button id="addButton" type="button">Add</button> <button id="saveButton" type="button">Save</button>
+        </div>
+        <div class="col-4">
+            <div id="apiMessage"></div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <p id="currentSlinsTable"></p>
+        </div>
+    </div>
+    <!-- <hr/>
+    <div class="row">
+        <div class="col-12">
+            <p id="slinDataTable"></p>
+        </div>
+    </div> -->
+</div>
+
+
+
+
+<script type="text/javascript">
+        // var slindDataColumnHeaders = [
+        //     {
+        //         field: "slin",
+        //         headerText: "SLIN"
+        //     },
+        //     {
+        //         field: "projId",
+        //         headerText: "Project ID"
+        //     },
+        //     {
+        //         field: "pop",
+        //         headerText: "POP"
+        //     },
+        //     {
+        //         field: "fundedCost",
+        //         headerText: "Funded Cost"
+        //     },
+        //     {
+        //         field: "expendedCost",
+        //         headerText: "Expended Cost"
+        //     },
+        //     {
+        //         field: "remaining",
+        //         headerText: "Remaining"
+        //     },
+        //     {
+        //         field: "description",
+        //         headerText: "Description"
+        //     },
+        //     {
+        //         field: "effectiveDate",
+        //         headerText: "Effective Date"
+        //     },
+        //     {
+        //         field: "closedDate",
+        //         headerText: "Closed Date"
+        //     }
+        // ];
+</script>
+</body>
+</html>
