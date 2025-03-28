@@ -76,3 +76,108 @@
 
 
   GRANT SELECT ON "FMS_AEGIS_ADMIN"."TASK_AREA" TO "FMS_AEGIS_ADMIN_READ_ROLE";
+
+
+package com.example.fms.entity;
+
+import jakarta.persistence.*;
+import java.math.BigDecimal;
+
+@Entity
+@Table(name = "TASK_AREA", schema = "FMS_AEGIS_ADMIN")
+public class TaskArea {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "TASK_AREA_UID", nullable = false)
+    private Long id;
+
+    @Column(name = "SEQ_NUM", precision = 19, scale = 0)
+    private BigDecimal seqNum;
+
+    @Column(name = "TASK_AREA", length = 10)
+    private String taskArea;
+
+    @Column(name = "FULL_TA", length = 128)
+    private String fullTa;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "PARENT_TASK_AREA_UID")
+    private TaskArea parentTaskArea;
+
+    @Column(name = "TASK_AREA_LEAD_UID", precision = 19, scale = 0)
+    private BigDecimal taskAreaLeadUid;
+
+    @Column(name = "TAL_FIRST_NAME", length = 50)
+    private String talFirstName;
+
+    @Column(name = "TAL_LAST_NAME", length = 50)
+    private String talLastName;
+
+    // Getters and setters
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public BigDecimal getSeqNum() {
+        return seqNum;
+    }
+
+    public void setSeqNum(BigDecimal seqNum) {
+        this.seqNum = seqNum;
+    }
+
+    public String getTaskArea() {
+        return taskArea;
+    }
+
+    public void setTaskArea(String taskArea) {
+        this.taskArea = taskArea;
+    }
+
+    public String getFullTa() {
+        return fullTa;
+    }
+
+    public void setFullTa(String fullTa) {
+        this.fullTa = fullTa;
+    }
+
+    public TaskArea getParentTaskArea() {
+        return parentTaskArea;
+    }
+
+    public void setParentTaskArea(TaskArea parentTaskArea) {
+        this.parentTaskArea = parentTaskArea;
+    }
+
+    public BigDecimal getTaskAreaLeadUid() {
+        return taskAreaLeadUid;
+    }
+
+    public void setTaskAreaLeadUid(BigDecimal taskAreaLeadUid) {
+        this.taskAreaLeadUid = taskAreaLeadUid;
+    }
+
+    public String getTalFirstName() {
+        return talFirstName;
+    }
+
+    public void setTalFirstName(String talFirstName) {
+        this.talFirstName = talFirstName;
+    }
+
+    public String getTalLastName() {
+        return talLastName;
+    }
+
+    public void setTalLastName(String talLastName) {
+        this.talLastName = talLastName;
+    }
+}
+
