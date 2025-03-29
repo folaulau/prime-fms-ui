@@ -50,29 +50,21 @@
                             <div class="row">
                                 <div class="col-12">
                                     <label for="fiscalYear">Fiscal Year:</label>
-                                    <select id="fiscalYearDropdown" name="fiscalYearDropdown" style="width: 200px;">
-                                        <option value="2027">2027</option>
-                                        <option value="2026">2026</option>
-                                        <option selected value="2025">2025</option>
-                                        <option value="2024">2024</option>
-                                        <option value="2023">2023</option>
+                                    <select id="fiscalYearDropdown" style="width: 200px;">
                                     </select>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-12">
                                     <label for="taskArea">Task Area:</label>
-                                    <select id="taskArea" class="dropdown">
-                                        <option value="A">A - Acquisition - Basara</option>
-                                        <option value="S">S - System Engineering</option>
+                                    <select id="taskAreaDropdown" style="width: 205px;">
                                     </select>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-12">
                                     <label for="supervisor">Supervisor:</label>
-                                    <select id="supervisor" class="dropdown">
-                                        <option value="/Basara">/Basara</option>
+                                    <select id="supervisorDropdown"  style="width: 205px;">
                                     </select>
                                 </div>
                             </div>
@@ -105,14 +97,116 @@
 
 
 <script type="text/javascript">
+
+    var apiDomain = 'http://localhost:8092/api';
+
     $(document).ready(function() {
+
+        populateFiscalYearDropdown();
+        getFiltersFromApi(2025, "A", null);
+
+        var searchFilters = {};
+
+        function getFiltersFromApi(fiscalYear, taskArea, supervisor){
+            console.log("getFiltersFromApi clicked! ");
+
+            $.ajax({
+                url: apiDomain+'/supervisor-view/filters',
+                type: 'GET',
+                contentType: 'application/json',
+                success: function(data) {
+                    console.log(data);
+                    searchFilters = data;
+                    displayData(searchFilters)
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error:', error);
+                }
+            });
+        }
+
+        function displayData(searchFilters){
+            populateTaskAreaDropdown(searchFilters.taskAreas)
+            populateSupervisorDropdown(searchFilters.supervisors['A'])
+        }
+
+        function populateFiscalYearDropdown(){
+            let now = new Date();
+            let currentYear = now.getFullYear();
+            let currentMonth = now.getMonth();
+
+            let currentFiscalYear = currentMonth >= 9 ? currentYear + 1 : currentYear;
+            let fiscalYearToSelect = currentFiscalYear;
+
+            let startYear = fiscalYearToSelect - 5;
+            let endYear = fiscalYearToSelect + 5;
+
+            let $dropdown = $("#fiscalYearDropdown");
+            $dropdown.empty();
+
+            for(let year=startYear; year <= endYear; year++){
+                let option = $('<option>',{
+                    text: year,
+                    value: year
+                });
+                if(year === fiscalYearToSelect){
+                    option.prop('selected', true);
+                }
+                $dropdown.append(option);
+            }
+
+        }
+
+        function populateTaskAreaDropdown(taskAreas = []){
+
+            let $dropdown = $("#taskAreaDropdown");
+            $dropdown.empty();
+
+            for(let i=0; i <= taskAreas.length; i++){
+                let taskAreaInfo = taskAreas[i];
+                console.log(taskAreaInfo)
+                let option = $('<option>',{
+                    text: taskAreaInfo?.fullName,
+                    value: taskAreaInfo?.uid
+                });
+                $dropdown.append(option);
+            }
+
+        }
+
+        function populateSupervisorDropdown(supervisorPaths = []){
+            console.log(`supervisorPaths: `,supervisorPaths)
+            let $dropdown = $("#supervisorDropdown");
+            $dropdown.empty();
+
+            for(let i=0; i <= supervisorPaths.length; i++){
+                let paths = supervisorPaths[i];
+                console.log(`paths: `,paths)
+                let option = $('<option>',{
+                    text: paths?.names,
+                    value: paths?.uids
+                });
+                $dropdown.append(option);
+            }
+
+        }
 
         var fiscalYearDropdown = $("#fiscalYearDropdown").val();
         console.log("fiscalYearDropdown: " + fiscalYearDropdown);
 
         $("#fiscalYearDropdown").change(function() {
             var selectedValue = $(this).val(); // Get selected value
-            console.log("fiscalYearDropdown: " + selectedValue);
+            console.log("fiscalYearDropdown change - selected value: " + selectedValue);
+        });
+
+        $("#taskAreaDropdown").change(function() {
+            var selectedValue = $(this).val(); // Get selected value
+            console.log("taskAreaDropdown change - selected value: " + selectedValue);
+        });
+
+        $("#supervisorDropdown").change(function() {
+            var selectedValue = $(this).val(); // Get selected value
+            console.log("supervisorDropdown change - selected value: " + selectedValue);
         });
 
         var columnHeaders = [
