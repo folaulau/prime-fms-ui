@@ -19,4 +19,29 @@ AND assignedHr.TASK_AREA = recoveryHr.TASK_AREA
 WHERE recoveryHr.FISCAL_YEAR = 2025
   AND recoveryHr.TASK_AREA = 'A'
 GROUP BY recoveryHr.TASK_AREA,
-         recoveryHr.FISCAL_YEAR FETCH FIRST 1 ROWS ONLY
+         recoveryHr.FISCAL_YEAR FETCH FIRST 1 ROWS ONLY;
+
+
+SELECT recoveryHr.TASK_AREA,
+       recoveryHr.FISCAL_YEAR,
+       ROUND(SUM(NVL(recoveryHr.OCT, 0)) - SUM(NVL(assignedHr.OCT, 0)), 2) AS OCT,
+       ROUND(SUM(NVL(recoveryHr.NOV, 0)) - SUM(NVL(assignedHr.NOV, 0)), 2) AS NOV,
+       ROUND(SUM(NVL(recoveryHr.DEC, 0)) - SUM(NVL(assignedHr.DEC, 0)), 2) AS DEC,
+       ROUND(SUM(NVL(recoveryHr.JAN, 0)) - SUM(NVL(assignedHr.JAN, 0)), 2) AS JAN,
+       ROUND(SUM(NVL(recoveryHr.FEB, 0)) - SUM(NVL(assignedHr.FEB, 0)), 2) AS FEB,
+       ROUND(SUM(NVL(recoveryHr.MAR, 0)) - SUM(NVL(assignedHr.MAR, 0)), 2) AS MAR,
+       ROUND(SUM(NVL(recoveryHr.APR, 0)) - SUM(NVL(assignedHr.APR, 0)), 2) AS APR,
+       ROUND(SUM(NVL(recoveryHr.MAY, 0)) - SUM(NVL(assignedHr.MAY, 0)), 2) AS MAY,
+       ROUND(SUM(NVL(recoveryHr.JUN, 0)) - SUM(NVL(assignedHr.JUN, 0)), 2) AS JUN,
+       ROUND(SUM(NVL(recoveryHr.JUL, 0)) - SUM(NVL(assignedHr.JUL, 0)), 2) AS JUL,
+       ROUND(SUM(NVL(recoveryHr.AUG, 0)) - SUM(NVL(assignedHr.AUG, 0)), 2) AS AUG,
+       ROUND(SUM(NVL(recoveryHr.SEP, 0)) - SUM(NVL(assignedHr.SEP, 0)), 2) AS SEP,
+       ROUND(SUM(NVL(recoveryHr.OCT_X, 0)) - SUM(NVL(assignedHr.OCT_X, 0)), 2) AS OCT_X
+FROM AEGIS_RECOVERY_HOURS_FMS recoveryHr
+LEFT JOIN AEGIS_WAD_HOURS_FMS assignedHr 
+  ON assignedHr.FISCAL_YEAR = recoveryHr.FISCAL_YEAR
+ AND assignedHr.TASK_AREA = recoveryHr.TASK_AREA
+WHERE recoveryHr.FISCAL_YEAR = 2025
+  AND recoveryHr.TASK_AREA = 'A'
+GROUP BY recoveryHr.TASK_AREA, recoveryHr.FISCAL_YEAR
+FETCH FIRST 1 ROWS ONLY;
